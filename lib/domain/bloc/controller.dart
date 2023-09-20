@@ -4,7 +4,6 @@ import 'package:video_player/video_player.dart';
 import 'package:helpers/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wakelock/wakelock.dart';
 
 import 'package:video_viewer/ui/fullscreen.dart';
 import 'package:video_viewer/domain/entities/ads.dart';
@@ -180,7 +179,7 @@ class VideoViewerController extends ChangeNotifier with WidgetsBindingObserver {
     Map<String, VideoSource> sources, {
     bool autoPlay = true,
   }) async {
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     final MapEntry<String, VideoSource> entry = sources.entries.first;
     _mounted = true;
     _source = sources;
@@ -190,19 +189,17 @@ class VideoViewerController extends ChangeNotifier with WidgetsBindingObserver {
       autoPlay: autoPlay,
     );
     log("VIDEO VIEWER INITIALIZED");
-    Wakelock.enable();
   }
 
   @override
   Future<void> dispose() async {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     _mounted = false;
     _closeOverlayButtons?.cancel();
     _deleteAdTimer();
     _video?.removeListener(_videoListener);
     _video?.pause();
     _video?.dispose();
-    Wakelock.disable();
     log("VIDEO VIEWER DISPOSED");
     super.dispose();
   }
